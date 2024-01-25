@@ -1,0 +1,2 @@
+tabs: ["index.html", "style.css", "script.js"]
+terminals: ["static-server -p $PUBLIC_PORT --no-cache"]
