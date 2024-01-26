@@ -7,40 +7,47 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="container">
-      <div class="container-box">
-        
-        <div class="bottom">
-          <ul class="score">
-            <li>
-              <p class="time-left">
-                time left:
-                <span><b></b></span>
-              </p>
-            </li>
-            <li>
-              <p class="mistakes">
-                mistakes:
-                <span><b> </b></span>
-              </p>
-            </li>
-            <li>
-              <p class="wpm">
-                WPM:
-                <span><b> </b></span>
-              </p>
-            </li>
-            <li>
-              <p class="cpm">
-                CPM:
-                <span><b> </b></span>
-              </p>
-            </li>
-          </ul>
+    <div class="container">
 
-        </div>
+      <div class="container-box">
+          <div class="heading">
+              <h2>Typing Test</h2>
+          </div>
+          <input class="main_input" type="text">
+          <div class="typing-text">
+
+          </div>
+          <div class="bottom">
+              <ul class="score">
+                  
+                  <li>
+                      <p class="time-left">time left: 
+                          <span><b></b></span>
+                      </p>
+                  </li><li>
+                      <p class="mistakes">mistakes: 
+                          <span><b></b></span>
+                      </p>
+                  </li><li>
+                      <p class="wpm">WPM: 
+                          <span><b></b></span>
+                      </p>
+                  </li>
+                  <li>
+                      <p class="cpm">CPM: 
+                          <span><b></b></span>
+                      </p>
+              </ul>
+              <button class="start_btn btn">Start</button>
+              <button class="paused_btn btn">Pause</button>
+
+
+
+          </div>
+          
       </div>
-    </div>
+      
+  </div>
     <script src="script.js"></script>
   </body>
 </html>
