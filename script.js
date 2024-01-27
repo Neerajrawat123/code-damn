@@ -6,12 +6,11 @@ const textElement = document.querySelector(".typing-text");
 const inputElement = document.querySelector("input");
 const startBtn = document.querySelector(".start_btn");
 const pauseBtn = document.querySelector(".paused_btn");
+let maxtime = 6;
 
 init();
-
 function init() {
-    inputElement.disabled = true;
-  let maxtime = 60;
+  inputElement.disabled = true;
 
   const gameDetails = {
     isGameStarted: false,
@@ -34,52 +33,125 @@ function init() {
     "Kindness is a force that can transform lives. A simple act of compassion, a genuine smile, or a helping hand has the power to brighten someone's day. In a world that can sometimes be challenging, embracing kindness fosters a sense of connection and makes the journey more meaningful.",
     "Our world is a mosaic of diverse cultures, languages, and traditions. Embracing global diversity enriches our understanding of the human experience. Each culture contributes to the global tapestry, and by appreciating our differences, we can build bridges of understanding and cooperation.",
   ];
-
   startBtn.addEventListener("click", start);
 
+  let temp = 0;
   function start() {
     if (!gameDetails.isGameStarted) {
       // first display the input element
-      inputElement.style.display = "block";
+      inputElement.value = "";
       gameDetails.isGameStarted = true;
+     
       initScore(); // initialize the scoreBoard
       generatePara(); // generate the paragraph
       initInput(); // initialze the input
-    //   initTimer(); // inittialize the timer
-    //   startTest(); // test logic
+      startTest(); // test logic
       startBtn.style.display = "none";
+
+      function initScore() {
+        gameDetails.characters = 0;
+        gameDetails.words = 0;
+        gameDetails.mistakes = 0;
+        gameDetails.timeLeft = maxtime;
+        timeLeftElement.textContent = gameDetails.timeLeft;
+        mistakesElement.textContent = gameDetails.mistakes;
+        wpmElement.textContent = gameDetails.wpm;
+        cpmElement.textContent = gameDetails.cpm;
+      
+  
+      }
+
+      function generatePara() {
+        textElement.innerHTML = "";
+        let ranObj = Math.floor(Math.random() * paragraphs.length);
+
+        gameDetails.paraObj = paragraphs[ranObj].split("");
+
+        gameDetails.paraObj.forEach((element) => {
+          let spantag = `<span>${element}</span>`;
+          textElement.innerHTML += spantag;
+        });
+      }
+
+      function initInput() {
+        inputElement.disabled = false;
+        inputElement.focus(); // change in description
+      }
+
+    
+      function startTest() {
+       
+      
+
+          temp++
+          let spanArr = document.querySelectorAll(".typing-text span");
+          let inputArr = [];
+          let keyCount = 0;
+          spanArr[keyCount].style.textDecoration = "underline";
+          
+          function handleKeypress(e) {
+          inputArr.push(e.key);
+          if (gameDetails.paraObj[keyCount] !== e.key) {
+            spanArr[keyCount].classList.add("incorrect");
+            gameDetails.mistakes++;
+          } else {
+            spanArr[keyCount].classList.add("correct");
+          }
+
+          updateScore(keyCount, inputArr);
+          gameDetails.characters++;
+          keyCount++;
+          spanArr[keyCount].style.textDecoration = "underline";
+          spanArr[keyCount - 1].style.textDecoration = "none";
+          if (keyCount === spanArr.length) {
+              endGame();
+              inputElement.removeEventListener("keypress", handleKeypress);
+              isEventListenerActive = false;
+            }
+        }
+        inputElement.addEventListener("keypress", handleKeypress);
+
+        initTimer(); // inittialize the timer
+        function initTimer() {
+            let interval = setInterval(() => {
+                if (gameDetails.timeLeft > 0) {
+                  gameDetails.timeLeft--;
+                  timeLeftElement.innerHTML = gameDetails.timeLeft;
+                } else {
+                  clearInterval(interval);
+                  inputElement.removeEventListener("keypress", handleKeypress);
+                  endGame();
+                }
+              }, 1000);
+            }
+    }
+    
+    /// update score
+    
+    function updateScore(keyCount, inputArr) {
+        mistakesElement.innerHTML = gameDetails.mistakes; // print mistakes
+        
+        // calculate words typed
+        if (keyCount > 1) {
+            if (inputArr[keyCount] === " " && inputArr[keyCount - 1] !== " ") {
+                gameDetails.words++;
+            }
+        }
+    }
+    
+    // end game logic
+    
+    function endGame() {
+        isEventListenerActive = false;
+        gameDetails.isGameStarted = false;
+        inputElement.disabled = true;
+        let charPerSec = gameDetails.characters / maxtime;
+        let wordPerSec = gameDetails.words / maxtime;
+        cpmElement.innerHTML = Math.ceil(charPerSec * 60);
+        wpmElement.innerHTML = Math.ceil(wordPerSec * 60);
+        startBtn.style.display = "block";
+        startBtn.textContent = "Try again";
+      }
     }
   }
-
-  function initScore() {
-    gameDetails.characters = 0;
-    gameDetails.words = 0;
-    gameDetails.mistakes = 0;
-    gameDetails.timeLeft = maxtime;
-    timeLeftElement.textContent = gameDetails.timeLeft;
-    mistakesElement.textContent = gameDetails.mistakes;
-    wpmElement.textContent = gameDetails.wpm;
-    cpmElement.textContent = gameDetails.cpm;
-  }
-
-  function generatePara() {
-    textElement.innerHTML = "";
-    let ranObj = Math.floor(Math.random() * paragraphs.length);
-
-    gameDetails.paraObj = paragraphs[ranObj].split("");
-
-    gameDetails.paraObj.forEach((element) => {
-      let spantag = `<span>${element}</span>`;
-      textElement.innerHTML += spantag;
-    });
-    textElement.addEventListener("click", () => inputElement.focus());
-  }
-
-  function initInput() {
-     inputElement.disabled = false;
-      inputElement.focus();  // change in description
-  }
-
-   
-  
 }
